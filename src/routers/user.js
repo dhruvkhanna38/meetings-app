@@ -6,16 +6,16 @@ const auth = require("../middleware/auth");
 const multer = require("multer");
 const sharp = require("sharp");
 const bcrypt = require("bcryptjs");
-// const sgMail = require('@sendgrid/mail');
-// sgMail.setApiKey(process.env.SENDGRID_KEY);
 
-const mailgun = require("mailgun-js");
-const DOMAIN = process.env.MAILGUN_DOMAIN;
-const mg = mailgun({apiKey: process.env.MAILGUN_KEY, domain: DOMAIN});
+
+
+var nodemailer = require("nodemailer");
+
 
 
 const crypto = require("crypto");
 const isNotVerified = require("../middleware/verifyEmail");
+
 
 
 //Get Profile
@@ -46,17 +46,29 @@ router.post("/users", async (req, res)=>{
                      emailToken:await crypto.randomBytes(64).toString('hex')
                     }
     const user = new User(newUser);
+    let fromMail = 'noreply@meetingsApp.com';
+    let toMail = user.email;
+    let subject = "Verify Email";
+    let text = `Verify your account by clicking on the following link -: http://${req.headers.host}/verify-email?token=${user.emailToken}`;
 
-    const data = {
-        from: "noreply@meetingsApp.com",
-        to: user.email,
-        subject: "Verify Email",
-        text: ` Verify your account by clicking on the following link -: http://${req.headers.host}/verify-email?token=${user.emailToken}`
-    };
-   
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: "dhruvk.me.16@nsit.net.in" ,
+            pass: process.env.GMAIL_PASS
+        }
+        });
+        let mailOptions = {
+            from: fromMail,
+            to: toMail,
+            subject: subject,
+            text: text
+            };
+    
     
     try{ 
-        await mg.messages().send(data);
+        await transporter.sendMail(mailOptions);
+        //await mg.messages().send(data);
         //await sgMail.send(message);
         console.log("sent");
         await user.save();
