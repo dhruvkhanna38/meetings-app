@@ -22,12 +22,16 @@
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "mailgun-js": "^0.22.0",
     "moment": "^2.28.0",
     "mongodb": "^3.6.2",
     "mongoose": "^5.10.5",
     "multer": "^1.4.2",
+    "nodemailer": "^6.4.11",
+    "nodemailer-mandrill-transport": "^1.2.0",
     "nodemon": "^2.0.4",
     "sharp": "^0.26.0",
+    "sib-api-v3-sdk": "^8.0.1",
     "validator": "^13.1.1"
   },
   "devDependencies": {

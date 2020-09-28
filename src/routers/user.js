@@ -6,8 +6,14 @@ const auth = require("../middleware/auth");
 const multer = require("multer");
 const sharp = require("sharp");
 const bcrypt = require("bcryptjs");
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_KEY);
+// const sgMail = require('@sendgrid/mail');
+// sgMail.setApiKey(process.env.SENDGRID_KEY);
+
+const mailgun = require("mailgun-js");
+const DOMAIN = "sandbox9d7676ee53b84ac9a80fb212ab2df236.mailgun.org";
+const mg = mailgun({apiKey: process.env.MAILGUN_KEY, domain: DOMAIN});
+
+
 const crypto = require("crypto");
 const isNotVerified = require("../middleware/verifyEmail");
 
@@ -40,19 +46,18 @@ router.post("/users", async (req, res)=>{
                      emailToken:await crypto.randomBytes(64).toString('hex')
                     }
     const user = new User(newUser);
-    const message = {
-        from:"noreply@email.com",
-        to:user.email,
-        subject:"Verify email",
-        text:`http://${req.headers.host}/verify-email?token=${user.emailToken}`,
-        html:`
-        <h1>Verify your account</h1>
-        <a href=http://${req.headers.host}/verify-email?token=${user.emailToken}>Verify your email</a>
-        `
-    }
+
+    const data = {
+        from: "noreply@meetingsApp.com",
+        to: user.email,
+        subject: "Verify Email",
+        text: ` Verify your account by clicking on the following link -: http://${req.headers.host}/verify-email?token=${user.emailToken}`
+    };
+   
     
     try{ 
-        await sgMail.send(message);
+        await mg.messages().send(data);
+        //await sgMail.send(message);
         console.log("sent");
         await user.save();
         res.status(201).send({emailToken:user.emailToken});
