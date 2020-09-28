@@ -10,7 +10,7 @@ const bcrypt = require("bcryptjs");
 // sgMail.setApiKey(process.env.SENDGRID_KEY);
 
 const mailgun = require("mailgun-js");
-const DOMAIN = "sandbox9d7676ee53b84ac9a80fb212ab2df236.mailgun.org";
+const DOMAIN = process.env.MAILGUN_DOMAIN;
 const mg = mailgun({apiKey: process.env.MAILGUN_KEY, domain: DOMAIN});
 
 
