@@ -1,28 +1,21 @@
-const calculateTip = (total, tipPerc=20)=>{
-    const tip = total * tipPerc/Number(100);
-    return total + tip;
-}
+const nodemailer = require("nodemailer");
+let fromMail = 'noreply@meetingsApp.com';
+let toMail = "dhruvkhann38@gmail.com";
+let subject = "Verify Email";
+let text = `Verify your account by clicking on the following link`;
 
-const fahrenheitToCelsius = (temp) => {
-    return (temp - 32) / 1.8
-}
+const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: "dhruvk.me.16@nsit.net.in" ,
+            pass: 
+        }
+        });
+let mailOptions = {
+            from: fromMail,
+            to: toMail,
+            subject: subject,
+            text: text
+            };
 
-const celsiusToFahrenheit = (temp) => {
-    return (temp * 1.8) + 32
-}
-
-const add = (a,b)=>{
-    return new Promise((resolve, reject)=>{
-        setTimeout(()=>{
-            if(a<0 || b<0){
-                return reject("Number must be non-negetive");
-            }
-            resolve(a+b);
-        }, 2000)
-    })
-}
-
-
-module.exports= {
-    calculateTip, fahrenheitToCelsius, celsiusToFahrenheit,add
-}
+transporter.sendMail(mailOptions);

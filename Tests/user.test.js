@@ -6,35 +6,6 @@ const {userOneId, userOne, setupDatabase} = require("./fixtures/db")
 
 beforeEach(setupDatabase);
 
-// test("Should signup a new user", async()=>{
-//     const response = await request(app).post('/users').send({
-//         name:"Harry Potter",
-//         email:"harryjpotter@gmail.com",
-//         password:"12345678"
-//     }).expect(201);
-
-//     //fetch user from the database(assert that data was changed properly)
-//     const user = await User.findById(response.body.user._id);
-//     expect(user).not.toBeNull();
-//     // Assertions about the response
-//     expect(response.body).toMatchObject({
-//         user:{
-//             name:"Harry Potter",
-//             email :"harryjpotter@gmail.com"
-//         }
-//     })
-//     //password is stored as bcrypt hash
-//     expect(user.password).not.toBe("12345678");
-
-//  });
-
-// test("Should not signup user with invalid name/email/password/age", async()=>{
-//     const response = await request(app).post('/users').send({
-//         name:"Harry Potter",
-//         email:"harryjpottergmail.com",
-//         password:"12345678"
-//     }).expect(400);
-// });
 
 test("Should Login Existing User", async ()=>{
     const response = await request(app).post('/users/login').send({
@@ -88,7 +59,7 @@ test("Should not delete account for non autheticated user", async()=>{
 });
 
 
-test("Should upload avatar image", async()=>{
+test("Should upload profile image", async()=>{
     await request(app).post("/users/me/profileNavbar").
     set("Authorization", `Bearer ${userOne.tokens[0].token}`).
     attach('avatar','tests/fixtures/profile-pic.jpg').

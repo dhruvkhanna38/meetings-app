@@ -7,11 +7,7 @@ const multer = require("multer");
 const sharp = require("sharp");
 const bcrypt = require("bcryptjs");
 
-
-
-var nodemailer = require("nodemailer");
-
-
+const nodemailer = require("nodemailer");
 
 const crypto = require("crypto");
 const isNotVerified = require("../middleware/verifyEmail");
