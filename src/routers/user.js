@@ -45,30 +45,34 @@ router.post("/users", async (req, res)=>{
             emailToken:await crypto.randomBytes(64).toString('hex')
            }
         const user = new User(newUser);
-        let fromMail = 'noreply@meetingsApp.com';
-        let toMail = user.email;
-        let subject = "Verify Email";
-        let text = `Verify your account by clicking on the following link -: http://${req.headers.host}/verify-email?token=${user.emailToken}`;
-
-        const transporter = nodemailer.createTransport({
-                                                        service: 'gmail',
-                                                        auth: {
-                                                        user: "dhruvk.me.16@nsit.net.in" ,
-                                                        pass: process.env.GMAIL_PASS
-                                                        }
-                                                        });
-        let mailOptions = {
-                        from: fromMail,
-                        to: toMail,
-                        subject: subject,
-                        text: text
-        };
-        await transporter.sendMail(mailOptions);
-        //await mg.messages().send(data);
-        //await sgMail.send(message);
-        console.log("sent");
-        await user.save();
-        res.status(201).send({emailToken:user.emailToken});
+        if(user){
+            let fromMail = 'noreply@meetingsApp.com';
+            let toMail = user.email;
+            let subject = "Verify Email";
+            let text = `Verify your account by clicking on the following link -: http://${req.headers.host}/verify-email?token=${user.emailToken}`;
+    
+            const transporter = nodemailer.createTransport({
+                                                            service: 'gmail',
+                                                            auth: {
+                                                            user: "dhruvk.me.16@nsit.net.in" ,
+                                                            pass: process.env.GMAIL_PASS
+                                                            }
+                                                            });
+            let mailOptions = {
+                            from: fromMail,
+                            to: toMail,
+                            subject: subject,
+                            text: text
+            };
+            await transporter.sendMail(mailOptions);
+            //await mg.messages().send(data);
+            //await sgMail.send(message);
+            console.log("sent");
+            await user.save();
+            res.status(201).send({emailToken:user.emailToken});
+        }else{
+            throw new Error("Email Id Already in Use");
+        }
     }catch(error){
         console.log(error);
         res.status(400).send(error.message);
